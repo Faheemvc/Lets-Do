@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/lets_do_web.ex",
-    "../lib/lets_do_web/**/*.*ex"
+    "../lib/lets_do_web/**/*.*ex",
+    "./lib/lets_do_web/**/*.{html,heex,js,css}"
   ],
   theme: {
     extend: {

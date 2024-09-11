@@ -1,24 +1,55 @@
-<.header>
-  Listing Tasks
-  <:actions>
-    <.link href={~p"/tasks/new"}>
-      <.button>New Task</.button>
-    </.link>
-  </:actions>
-</.header>
+<header class="flex justify-center items-center h-16 bg-gray-100">
+  <h1 class="text-3xl font-bold text-gray-900">Todos</h1>
+</header>
+<div class="row">
+  <div class="column column-60 column-offset-20">
+    <.header>
+      <.simple_form :let={f} for={@changeset} action={~p"/tasks"}>
+        <.error :if={@changeset.action}>
+          Oops, something went wrong! Please check the errors below.
+        </.error>
+        <.input field={f[:text]} type="text" placeholder="What needs to be done?" />
+        <:actions>
+          <.button>Save Task</.button>
+        </:actions>
+      </.simple_form>
+    </.header>
+    <section>
+      <.table id="tasks" rows={@tasks} row_click={&JS.navigate(~p"/tasks/#{&1}/edit")}>
+      
+        <:action :let={task}>
+          <.link navigate={~p"/tasks/completed/#{task}"} method="patch" >
+            <%= if task.completed do %>
+              &#9745;
+            <% else %>
+              &#10004;
+            <% end %>
+          </.link>
+        </:action>
+        
+        <:col :let={task} ><%= task.text %></:col>
 
-<.table id="tasks" rows={@tasks} row_click={&JS.navigate(~p"/tasks/#{&1}")}>
-  <:col :let={task} label="Text"><%= task.text %></:col>
-  <:col :let={task} label="Completed"><%= task.completed %></:col>
-  <:action :let={task}>
-    <div class="sr-only">
-      <.link navigate={~p"/tasks/#{task}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/tasks/#{task}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={task}>
-    <.link href={~p"/tasks/#{task}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
-  </:action>
-</.table>
+        <:action :let={task}>
+          <.link href={~p"/tasks/#{task.id}"} method="delete" data-confirm="Are you sure?" class="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none rounded-full">
+            X
+          </.link>
+        </:action>
+      </.table>
+    </section>
+
+    <%= if not Enum.empty?(@tasks) do %>
+      <footer>
+        <small>0 todos left</small>
+          <div class="float-right">
+            <.link navigate={~p"/"}></.link>
+            <code>All</code>
+            <.link navigate={~p"/"}>Active [0]</.link>
+            <.link navigate={~p"/"}>Completed [0]</.link>
+            <.link navigate={~p"/tasks/clear"}>Clear Completed [0]</.link>
+          </div>
+      </footer>
+    <% end %>
+
+  </div>
+ </div>
+

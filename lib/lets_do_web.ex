@@ -49,6 +49,28 @@ defmodule LetsDoWeb do
     end
   end
 
+  def view do
+  quote do
+    use Phoenix.View,
+      root: "lib/lets_do_web/templates",
+      namespace: LetsDoWeb
+
+    # Import functions from controllers
+    import Phoenix.Controller,
+      only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
+
+    # Import all HTML functionality (forms, tags, etc.)
+    use Phoenix.HTML
+
+    # Import helpers
+    import LetsDoWeb.Router.Helpers
+    import LetsDoWeb.ErrorHelpers
+    import LetsDoWeb.Gettext
+  end
+end
+
+
+
   def live_view do
     quote do
       use Phoenix.LiveView,

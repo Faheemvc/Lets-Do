@@ -16,6 +16,7 @@ config :lets_do, LetsDoWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
+    view: LetsDoWeb.ErrorView,
     formats: [html: LetsDoWeb.ErrorHTML, json: LetsDoWeb.ErrorJSON],
     layout: false
   ],

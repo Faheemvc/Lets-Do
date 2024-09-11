@@ -10,14 +10,7 @@ defmodule LetsDoWeb.TaskControllerTest do
   describe "index" do
     test "lists all tasks", %{conn: conn} do
       conn = get(conn, ~p"/tasks")
-      assert html_response(conn, 200) =~ "Listing Tasks"
-    end
-  end
-
-  describe "new task" do
-    test "renders form", %{conn: conn} do
-      conn = get(conn, ~p"/tasks/new")
-      assert html_response(conn, 200) =~ "New Task"
+      assert html_response(conn, 200) =~ "Todos"
     end
   end
 
@@ -25,16 +18,15 @@ defmodule LetsDoWeb.TaskControllerTest do
     test "redirects to show when data is valid", %{conn: conn} do
       conn = post(conn, ~p"/tasks", task: @create_attrs)
 
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == ~p"/tasks/#{id}"
+      assert redirected_to(conn) == ~p"/"
 
-      conn = get(conn, ~p"/tasks/#{id}")
-      assert html_response(conn, 200) =~ "Task #{id}"
+      conn = get(conn, ~p"/")
+      assert html_response(conn, 200) =~ "Todos"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/tasks", task: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New Task"
+      assert html_response(conn, 200) =~ "Todos"
     end
   end
 
@@ -52,9 +44,9 @@ defmodule LetsDoWeb.TaskControllerTest do
 
     test "redirects when data is valid", %{conn: conn, task: task} do
       conn = put(conn, ~p"/tasks/#{task}", task: @update_attrs)
-      assert redirected_to(conn) == ~p"/tasks/#{task}"
+      assert redirected_to(conn) == ~p"/"
 
-      conn = get(conn, ~p"/tasks/#{task}")
+      conn = get(conn, ~p"/")
       assert html_response(conn, 200) =~ "some updated text"
     end
 
@@ -69,11 +61,10 @@ defmodule LetsDoWeb.TaskControllerTest do
 
     test "deletes chosen task", %{conn: conn, task: task} do
       conn = delete(conn, ~p"/tasks/#{task}")
-      assert redirected_to(conn) == ~p"/tasks"
+      assert redirected_to(conn) == ~p"/"
 
-      assert_error_sent 404, fn ->
-        get(conn, ~p"/tasks/#{task}")
-      end
+      conn = get(conn, ~p"/")
+      refute html_response(conn, 200) =~ task.text
     end
   end
 
