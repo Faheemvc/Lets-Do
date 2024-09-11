@@ -1,6 +1,7 @@
 # LetsDo
 
 ![alt text](image.png)
+
 App to mark ToDos
 
 To start your Phoenix server:
